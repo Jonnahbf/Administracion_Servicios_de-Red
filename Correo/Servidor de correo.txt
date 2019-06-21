@@ -1,0 +1,42 @@
+--Configurar servicio de correo en debian 9.
+
+--Primero hacer que a la maquina de correo se le asigne siempre la misma IP
+en el DNS, en el fichero de zonas se debe agregar el registro MX, el cual es
+utlizado para consultar cual es el servidor de correo de esa zona.
+ej= @ IN MX 10 name
+
+--Reiniciar el servicio bind9.
+
+--En la maquina que servira de correo hay que instalar postfix
+
+--Configurar el fichero /etc/postfix/main.cf
+	-En la linea mynetworks agregar las redes que podran enviar correos
+	-En la linea inet_protocols poner ipv4
+	-Comentar la linea mailbox_command (Hacer procesamiento intermedio)
+	-Añadir la line home_mailbox = Maildir/
+
+--Reiniciar postfix
+
+--Instalar imap(para poder acceder a los buzones)
+
+--Configurar el fichero /etc/dovecot/conf.d/10-auth.connf
+	-Descomentar la linea disable_plaintext_auth y asignarle "no"
+
+--Configurar el fichero /etc/dovecot/conf.d/10-mail.conf
+	-Configurar la locacion del correo en mail_location y asignarle
+	-el directorio que especificamos antes que era Maildir
+
+--Reiniciar el dovecot
+
+--Agregar usuarios para probar el sistema
+
+--Instalar Thunderbird en Windows para probar el servicio
+
+--Para trabajarlo de la web hay que instalar roundcube en la maquina del servicio web
+
+--Modificar el fichero /etc/apache2/conf-enable/roundcube.conf
+	-Descomentar la linea Alias /roundcube
+
+--Configurar el fichero /var/lib/roundcube/config/config.inc.php
+	-En default host añadir imap.test.com
+	-En smtp-server añadir smtp.test.com
